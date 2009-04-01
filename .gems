@@ -1,0 +1,4 @@
+dm-core --version '>= 0.9.10'
+dm-timestamps --version '>= 0.9.10'
+nakajima-rack-flash --source gems.github.com
+json  --version '>= 1.1.3'

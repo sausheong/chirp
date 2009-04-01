@@ -1,0 +1,72 @@
+<a href='/home'>home</a> | <a href='/direct_messages/received'>direct messages (<%= @dm_count%>)</a> | <a href='/logout'>logout</a>
+<% if @user != @myself and not @myself.follows.include? @user then %> | <a href='/follow/<%= @user.email%>'>follow this chirper!</a><% end %>
+<div id='error'><%= flash[:error]%></div>
+<table class="columns" cellspacing="0">
+	<tr>
+		<td id="content" class="round-left column">
+			<div class='wrapper'>
+				<% if @user == @myself then %>
+				<form method="post" action="/chirp">	
+					<table class='chirp-box'>
+						<tr><td><h3>What are you doing?</td></tr>
+						<tr><td><textarea cols="40" rows="2" name="chirp"></textarea></td></tr>
+						<tr><td id='update-box'><input id='update-button' value="update" type="submit"></td></tr>												
+					</table>
+				</form>
+				<% else %>
+					<span><img width='48' height='48' src='<%= @user.photo_url %>'/><strong><%= @user.nickname%></strong></span>					
+				<% end %>
+				<div class="tab">
+					<ol class='statuses'>
+						<% @user.displayed_chirps.each do |chirp| %>
+						<li>
+							<span class="status-body">
+								<span class="thumb vcard author"><img width='48' height='48' src='<%= chirp.user.photo_url %>'/></span>							
+								<strong><a class="screen-name" href="/<%= chirp.user.email %>"><%= chirp.user.nickname%></a></strong>
+								<span class="entry-content"><%= chirp.text %></span><br/>
+								<span class="meta entry-meta"><%= time_ago_in_words(chirp.created_at.to_time)%></span>
+							</span>
+						</li>
+						<% end unless @user.displayed_chirps.nil? %>	
+					</ol>
+				</div>
+			</div>
+		</td>
+		<td id='side_base' class='column round-right'>
+			<div id="side">
+				<div class="section" id="profile">
+					<div class="user_icon">
+						<a alt='Avatar from Gravatar, click to signup for one, or change your current avatar' href="http://en.gravatar.com/site/login"><img width="48" height="48" src="<%= @myself.photo_url%>" class="side_thumb photo fn"/></a>
+						<p id="me_name">
+							<%= @myself.nickname%>
+						</p>
+						<span id='me_email'><%= @myself.email%></span>
+					</div>
+
+					<table cellspacing="0" class="stats">
+						<tbody><tr>
+							<td>
+								<a rel="me" id="following_count_link" href="/follows">
+									<span class="stats_count numeric" id="following_count"><%= @myself.follows.size%></span>
+									<br/>
+									<span class="label">Following</span>
+								</a>
+							</td>
+							<td>
+								<a id="follower_count_link" href="/followers">
+									<span class="stats_count numeric" id="follower_count"><%= @myself.followers.size%></span>
+									<br/>
+									<span class="label">Followers</span>
+								</a>
+							</td><td>
+								<a href="/sausheong"><span class="stats_count numeric" id="update_count"><%= @myself.chirps.size%></span>
+									<br/>
+									<span class="label">Chirps</span></a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</td>
+		</tr>
+	</table>

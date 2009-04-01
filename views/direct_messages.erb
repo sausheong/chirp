@@ -1,0 +1,70 @@
+<a href='/home'>home</a> | <a href='/direct_messages/received'>direct messages (<%= @dm_count%>)</a> | <a href='/logout'>logout</a>
+<table class="columns" cellspacing="0">
+	<tr>
+		<td id="content" class="round-left column">
+			<div class='wrapper'>
+				<form method="post" action="/chirp">	
+					<table class='chirp-box'>
+						<tr><td><h3>What are you doing?</td></tr>
+						<tr><td><textarea cols="40" rows="2" name="chirp"></textarea></td></tr>
+						<tr><td id='update-box'><input id='update-button' value="update" type="submit"></td></tr>												
+					</table>
+				</form>
+				<ul class="tabMenu">
+				  <li class="active"><a id="direct_message_inbox" href="/direct_messages/received">Inbox</a></li>
+				  <li><a id="direct_message_sent" href="/direct_messages/sent">Sent</a></li>
+				</ul>				
+				<div class="tab">
+					<ol class='statuses'>
+						<% @chirps.each do |chirp| %>
+						<li>
+							<span class="status-body">
+								<span class="thumb vcard author"><img width='48' height='48' src='<%= chirp.user.photo_url %>'/></span>							
+								<strong><a class="screen-name" href="/<%= chirp.user.email %>"><%= chirp.user.nickname%></a></strong>
+								<span class="entry-content"><%= chirp.text %></span><br/>
+								<span class="meta entry-meta"><%= time_ago_in_words(chirp.created_at.to_time)%></span>
+							</span>
+						</li>
+						<% end unless @chirps.nil? %>	
+					</ol>
+				</div>
+			</div>
+		</td>
+		<td id='side_base' class='column round-right'>
+			<div id="side">
+				<div class="section" id="profile">
+					<div class="user_icon">
+						<a href="/<%= @myself.email%>"><img width="48" height="48" src="<%= @myself.photo_url%>" class="side_thumb photo fn"/></a>
+						<p id="me_name">
+							<%= @myself.nickname%>
+						</p>
+						<span id='me_email'><%= @myself.email%></span>
+					</div>
+
+					<table cellspacing="0" class="stats">
+						<tbody><tr>
+							<td>
+								<a rel="me" id="following_count_link" href="/follows">
+									<span class="stats_count numeric" id="following_count"><%= @myself.follows.size%></span>
+									<br/>
+									<span class="label">Following</span>
+								</a>
+							</td>
+							<td>
+								<a id="follower_count_link" href="/followers">
+									<span class="stats_count numeric" id="follower_count"><%= @myself.followers.size%></span>
+									<br/>
+									<span class="label">Followers</span>
+								</a>
+							</td><td>
+								<a href="/sausheong"><span class="stats_count numeric" id="update_count"><%= @myself.chirps.size%></span>
+									<br/>
+									<span class="label">Chirps</span></a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</td>
+		</tr>
+	</table>
